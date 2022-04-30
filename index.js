@@ -1,11 +1,15 @@
-const scoreArr = [];
-let counter = 5;
-let startTime;
-let active = false;
+const SCORE_ARR = [];
+let GAMEBOARD;
+let ROUND_COUNTER = 5;
+let TO_FAST_CLICK_COUNTER = 0;
+let START_TIME;
+let GAME_ACTIVE = false;
 
 document.addEventListener('DOMContentLoaded', function() {
+    GAMEBOARD = document.getElementById('gameboard');
 
-    const gameboard = document.getElementById('gameboard');
+    printBestScore();
+    showMenu();
 
     document.getElementById('start-btn').addEventListener('click', function () {
         start()
@@ -18,41 +22,59 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function start() {
+    showGameBoard();
 
-    gameboard.setAttribute('style', 'background-color:blue');
+    GAMEBOARD.setAttribute('style', 'background-color:blue');
     nextRound();
 
-    gameboard.addEventListener('click', function() {
+    GAMEBOARD.addEventListener('click', function() {
 
-        if (active === true) {
-            let time = new Date();
-            const timestampInMilliseconds = time.getTime();
-            gameboard.setAttribute('style', 'background-color:blue');
-            active = false;
-            scoreArr.push(timestampInMilliseconds - startTime)
+        if (GAME_ACTIVE === true) {
+            const timestamp = new Date().getTime();
+            let score = timestamp- START_TIME;
 
-            counter--;
-            printScore();
+            updateScore(score);
 
-            if (counter > 0) {
+            printActuallScore();
+
+            deactiveGameBoard();
+
+            ROUND_COUNTER--;
+            
+
+            if (ROUND_COUNTER> 0) {
                 nextRound();
             } else {
-                alert('win');
-                //hide elements
+                stop();
             }
 
         } else {
-            console.log('to fast!')
+            TO_FAST_CLICK_COUNTER++;
         }
 
 
     })
 };
 
+function updateScore(score){
+    SCORE_ARR.push(score)
+
+    if (localStorage.getItem('best') > score) {
+        localStorage.setItem('best', score);
+        printBestScore();
+    }
+
+}
+
+function deactiveGameBoard() {
+    GAMEBOARD.setAttribute('style', 'background-color:blue');
+    GAME_ACTIVE = false;
+}
+
 function activeGameBoard() {
-    gameboard.setAttribute('style', 'background-color:red');
-    startTime = new Date().getTime();
-    active = true
+    GAMEBOARD.setAttribute('style', 'background-color:red');
+    START_TIME = new Date().getTime();
+    GAME_ACTIVE = true;
 };
 
 function nextRound() {
@@ -61,22 +83,52 @@ function nextRound() {
     setTimeout(() => activeGameBoard(), timeInterval);
 };
 
-
-function printScore() {
-
-    document.getElementById('score-arr').innerText = '';
-    for (let i = 0; i < scoreArr.length; i++) {
-        document.getElementById('score-arr').innerText += ' ' + scoreArr[i];
+function printBestScore() {
+    if (localStorage.getItem('best') === null) {
+        bestScore = 0;
+    } else {
+        bestScore = localStorage.getItem('best');
     }
 
-    document.getElementById('score-fastest').innerText = "Fastest: " + Math.min.apply(Math, scoreArr);
-    document.getElementById('score-average').innerText = "Average: " + scoreArr.reduce((v1, v2) => v1 + v2)/scoreArr.length;
-    document.getElementById('score-slowest').innerText = "slowest: " + Math.max.apply(Math, scoreArr);
+    document.getElementById('score-best').innerText = 'Best score ever: ' + bestScore;
+}
+
+function printActuallScore() {
+
+
+    document.getElementById('score-arr').innerText = '';
+    for (let i = 0; i < SCORE_ARR.length; i++) {
+        document.getElementById('score-arr').innerText += ' ' + SCORE_ARR[i];
+    }
+    
+    document.getElementById('score-fastest').innerText = "Fastest: " + Math.min.apply(Math, SCORE_ARR);
+    document.getElementById('score-average').innerText = "Average: " + SCORE_ARR.reduce((v1, v2) => v1 + v2)/SCORE_ARR.length;
+    document.getElementById('score-slowest').innerText = "slowest: " + Math.max.apply(Math, SCORE_ARR);
+
 
 };
-
 
 
 function stop() {
-    alert('stop');
+    alert('You have clidked to fast ' + TO_FAST_CLICK_COUNTER + ' times');
+    showStats();
 };
+
+function showMenu(){
+    document.getElementById('menu').style.display = 'block';
+    document.getElementById('game-interface').style.display = 'none';
+    document.getElementById('game-over').style.display = 'none';
+}
+
+function showGameBoard() {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('game-interface').style.display = 'block';
+    document.getElementById('game-over').style.display = 'none';
+
+}
+
+function showStats() {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('game-interface').style.display = 'none';
+    document.getElementById('game-over').style.display = 'block';
+}
