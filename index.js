@@ -74,7 +74,7 @@ function start() {
 function updateScore(score){
     SCORE_ARR.push(score)
 
-    if (sessionStorage.getItem('best') > score) {
+    if (sessionStorage.getItem('best') === null || sessionStorage.getItem('best') > score) {
         sessionStorage.setItem('best', score);
         printBestScore();
     }
@@ -101,12 +101,15 @@ function nextRound() {
 
 function printBestScore() {
 
-    
-    if (sessionStorage.getItem('best') === null) {
-        sessionStorage.setItem('best', 0);
-    } 
+    let bestScore;
 
-    document.getElementById('score-best').innerText = 'Best score ever: ' + sessionStorage.getItem('best');
+    if (sessionStorage.getItem('best') === null) {
+        bestScore = 0;
+    } else {
+        bestScore = sessionStorage.getItem('best');
+    }
+
+    document.getElementById('score-best').innerText = 'Best score ever: ' + bestScore;
 }
 
 function printActuallScore() {
