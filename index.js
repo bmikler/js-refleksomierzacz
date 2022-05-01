@@ -1,4 +1,4 @@
-const SCORE_ARR = [];
+let SCORE_ARR = [];
 let GAMEBOARD;
 let ROUND_COUNTER = 5;
 let TO_FAST_CLICK_COUNTER = 0;
@@ -10,28 +10,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     printBestScore();
     showMenu();
+    deactiveGameBoard();
 
     document.getElementById('start-btn').addEventListener('click', function () {
-        start()
+
+        let readedValue = document.getElementById('rounds-number').value;
+
+        if (readedValue == "" || readedValue < 1) {
+            document.getElementById("error").innerText = 'Wrong rounds number!';
+        } else {
+            ROUND_COUNTER = parseInt(readedValue);
+            start();
+        }
+
     });
 
     document.getElementById('stop-btn').addEventListener('click', function () {
         stop()
     });
 
-});
-
-function start() {
-    showGameBoard();
-
-    GAMEBOARD.setAttribute('style', 'background-color:blue');
-    nextRound();
+    document.getElementById('play-again').addEventListener('click', function () {
+        showMenu();
+    });
 
     GAMEBOARD.addEventListener('click', function() {
 
         if (GAME_ACTIVE === true) {
             const timestamp = new Date().getTime();
-            let score = timestamp- START_TIME;
+            let score = timestamp - START_TIME;
 
             updateScore(score);
 
@@ -39,8 +45,7 @@ function start() {
 
             deactiveGameBoard();
 
-            ROUND_COUNTER--;
-            
+            ROUND_COUNTER--;            
 
             if (ROUND_COUNTER> 0) {
                 nextRound();
@@ -52,8 +57,18 @@ function start() {
             TO_FAST_CLICK_COUNTER++;
         }
 
-
     })
+
+});
+
+function start() {
+    SCORE_ARR = [];
+    clearActuallScore();
+    showGameBoard();
+
+    GAMEBOARD.setAttribute('style', 'background-color:blue');
+    nextRound();
+
 };
 
 function updateScore(score){
@@ -68,11 +83,13 @@ function updateScore(score){
 
 function deactiveGameBoard() {
     GAMEBOARD.setAttribute('style', 'background-color:blue');
+    document.querySelector("#gameboard > h1").innerText = "WAIT...";
     GAME_ACTIVE = false;
 }
 
 function activeGameBoard() {
     GAMEBOARD.setAttribute('style', 'background-color:red');
+    document.querySelector("#gameboard > h1").innerText = "CLICK ME!";
     START_TIME = new Date().getTime();
     GAME_ACTIVE = true;
 };
@@ -94,41 +111,53 @@ function printBestScore() {
 }
 
 function printActuallScore() {
+    
+    document.getElementById('score-fastest').innerText = "Fastest time: " + Math.min.apply(Math, SCORE_ARR) + " milliseconds";
+    document.getElementById('score-average').innerText = "Average time: " + Math.round(SCORE_ARR.reduce((v1, v2) => v1 + v2)/SCORE_ARR.length) + " milliseconds";
+    document.getElementById('score-slowest').innerText = "Slowest time: " + Math.max.apply(Math, SCORE_ARR) + " milliseconds";
+};
 
-
+function clearActuallScore() {
     document.getElementById('score-arr').innerText = '';
+    document.getElementById('score-fastest').innerText = '';
+    document.getElementById('score-average').innerText = '';
+    document.getElementById('score-slowest').innerText = '';
+}
+
+function stop() {
+
+    document.getElementById('score-arr').innerText = 'Your results: ';
     for (let i = 0; i < SCORE_ARR.length; i++) {
         document.getElementById('score-arr').innerText += ' ' + SCORE_ARR[i];
     }
-    
-    document.getElementById('score-fastest').innerText = "Fastest: " + Math.min.apply(Math, SCORE_ARR);
-    document.getElementById('score-average').innerText = "Average: " + SCORE_ARR.reduce((v1, v2) => v1 + v2)/SCORE_ARR.length;
-    document.getElementById('score-slowest').innerText = "slowest: " + Math.max.apply(Math, SCORE_ARR);
 
-
-};
-
-
-function stop() {
-    alert('You have clidked to fast ' + TO_FAST_CLICK_COUNTER + ' times');
+    if (TO_FAST_CLICK_COUNTER > 0) {
+        document.getElementById('to-fast').innerText = "You clicked too fast " + TO_FAST_CLICK_COUNTER + " times!";
+    }
     showStats();
 };
 
 function showMenu(){
-    document.getElementById('menu').style.display = 'block';
+    document.getElementById('menu').style.display = 'flex';
     document.getElementById('game-interface').style.display = 'none';
     document.getElementById('game-over').style.display = 'none';
+
+    document.getElementById('score').style.display = 'none';
+
+    document.getElementById('rounds-number').value = "";
+    document.getElementById('error').innerText = "";
 }
 
 function showGameBoard() {
     document.getElementById('menu').style.display = 'none';
-    document.getElementById('game-interface').style.display = 'block';
+    document.getElementById('game-interface').style.display = 'flex';
     document.getElementById('game-over').style.display = 'none';
+    document.getElementById('score').style.display = 'flex';
 
 }
 
 function showStats() {
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game-interface').style.display = 'none';
-    document.getElementById('game-over').style.display = 'block';
+    document.getElementById('game-over').style.display = 'flex';
 }

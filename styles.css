@@ -1,5 +1,81 @@
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    background-color: darkgray;
+}
+
+#app {
+    background-color: white;
+    width: 70%;
+    height: 100vh;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#title {
+    flex-direction: row;
+    background-color: lightgray;
+    width: fit-content;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#menu {
+    flex-direction: column;
+}
+
+#score {
+    flex-direction: column;
+}
+
+#actual {
+    margin: 0px;
+}
+
+#stats {
+    flex-direction: row;
+}
+
+#game-interface {
+    flex-direction: column;
+}
+
+#game-over {
+    flex-direction: column;
+}
+
 #gameboard {
-    height: 100px;
-    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    height: 200px;
+    width: 200px;
     background-color: blue;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#gameboard h1 {
+    margin-top: 40%;
+    margin-bottom: 50%;
+}
+
+#error {
+    color: red;
+}
+
+#to-fast {
+    color: red;
+}
+
+button {
+    margin: auto;
+    padding: 10px;
+    height: fit-content;
+    width: fit-content;
 }
