@@ -74,7 +74,7 @@ function start() {
 function updateScore(score){
     SCORE_ARR.push(score)
 
-    if (sessionStorage.getItem('best') === null || sessionStorage.getItem('best') > score) {
+    if (sessionStorage.getItem('best') == null || sessionStorage.getItem('best') > score) {
         sessionStorage.setItem('best', score);
         printBestScore();
     }
