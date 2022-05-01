@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             printActuallScore();
 
-            deactiveGameBoard();
-
             ROUND_COUNTER--;            
 
             if (ROUND_COUNTER> 0) {
@@ -95,6 +93,7 @@ function activeGameBoard() {
 };
 
 function nextRound() {
+    deactiveGameBoard();
     const timeInterval = Math.random() * 10000;
     setTimeout(() => activeGameBoard(), timeInterval);
 };
