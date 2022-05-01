@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     printBestScore();
     showMenu();
-    deactiveGameBoard();
 
     document.getElementById('start-btn').addEventListener('click', function () {
 
@@ -60,11 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function start() {
-    SCORE_ARR = [];
+
     clearActuallScore();
+
     showGameBoard();
 
-    GAMEBOARD.setAttribute('style', 'background-color:blue');
     nextRound();
 
 };
@@ -72,7 +71,7 @@ function start() {
 function updateScore(score){
     SCORE_ARR.push(score)
 
-    if (sessionStorage.getItem('best') == 0 || sessionStorage.getItem('best') === null || sessionStorage.getItem('best') > score) {
+    if (sessionStorage.getItem('best') === null || sessionStorage.getItem('best') > score) {
         sessionStorage.setItem('best', score);
         printBestScore();
     }
@@ -119,6 +118,9 @@ function printActuallScore() {
 };
 
 function clearActuallScore() {
+
+    SCORE_ARR = [];
+
     document.getElementById('score-arr').innerText = '';
     document.getElementById('score-fastest').innerText = '';
     document.getElementById('score-average').innerText = '';
@@ -126,6 +128,8 @@ function clearActuallScore() {
 }
 
 function stop() {
+
+    deactiveGameBoard();
 
     document.getElementById('score-arr').innerText = 'Your results: ';
     for (let i = 0; i < SCORE_ARR.length; i++) {
@@ -161,4 +165,5 @@ function showStats() {
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game-interface').style.display = 'none';
     document.getElementById('game-over').style.display = 'flex';
+    document.getElementById('score').style.display = 'flex';
 }
