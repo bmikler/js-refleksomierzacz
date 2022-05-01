@@ -96,18 +96,17 @@ function activeGameBoard() {
 
 function nextRound() {
     const timeInterval = Math.random() * 10000;
-    console.log('interval:' + timeInterval);
     setTimeout(() => activeGameBoard(), timeInterval);
 };
 
 function printBestScore() {
-    if (sessionStorage.getItem('best') === null) {
-        bestScore = 0;
-    } else {
-        bestScore = sessionStorage.getItem('best');
-    }
 
-    document.getElementById('score-best').innerText = 'Best score ever: ' + bestScore;
+    
+    if (sessionStorage.getItem('best') === null) {
+        sessionStorage.setItem('best', 0);
+    } 
+
+    document.getElementById('score-best').innerText = 'Best score ever: ' + sessionStorage.getItem('best');
 }
 
 function printActuallScore() {
